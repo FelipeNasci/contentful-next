@@ -1,13 +1,13 @@
 import Image from "next/image";
 import { cmsClient } from "../../config/index.js";
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { RichText } from "../../components/RichText.js";
+
 export async function getStaticPaths() {
   const { items: recipes } = await cmsClient.getEntries({
     content_type: "recipe",
   });
 
   const paths = recipes.map(({ fields }) => `/recipes/${fields.slug}`);
-  console.log(paths);
   return { paths, fallback: false };
 }
 
@@ -28,19 +28,12 @@ export default function RecipeDetails({ recipe }) {
 
   const image = `https:${featureImage.fields.file.url}`;
 
-  const prepareMode = documentToReactComponents(method);
   return (
     <>
       <h3>{title}</h3>
       <p>prepare around of {cookingTime} minutes</p>
 
-      <Image
-        src={image}
-        placeholder={title}
-        alt={title}
-        width={400}
-        height={250}
-      />
+      <Image src={image} alt={title} width={400} height={250} />
 
       <h4>Ingredients:</h4>
       <ul>
@@ -50,8 +43,7 @@ export default function RecipeDetails({ recipe }) {
       </ul>
 
       <h5>Prepare Mode</h5>
-
-      <p>{prepareMode}</p>
+      <RichText richText={method} />
     </>
   );
 }
