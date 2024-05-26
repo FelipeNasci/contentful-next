@@ -1,17 +1,15 @@
-import { createClient } from "contentful";
-import Config from "../config/index.js";
 import Card from "../components/Card/index.js";
+import { cmsClient } from "../config/index.js";
 
 export async function getStaticProps() {
-  const client = createClient(Config.contentful);
-  const { items: recipes } = await client.getEntries({
+  const { items: recipes } = await cmsClient.getEntries({
     content_type: "recipe",
   });
 
   return { props: { recipes } };
 }
 
-export default function Recipes({ recipes, assets }) {
+export default function Recipes({ recipes }) {
   return (
     <div className="recipe-list">
       {recipes.map(({ fields, sys }) => (
