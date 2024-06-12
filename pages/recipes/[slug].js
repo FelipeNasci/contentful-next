@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { cmsClient } from "../../config/index.js";
 import { RichText } from "../../components/RichText.js";
+import { redirect } from "next/dist/server/api-utils/index.js";
 
 export async function getStaticPaths() {
   const { items: recipes } = await cmsClient.getEntries({
@@ -8,7 +9,7 @@ export async function getStaticPaths() {
   });
 
   const paths = recipes.map(({ fields }) => `/recipes/${fields.slug}`);
-  return { paths, fallback: false };
+  return { paths, fallback: true };
 }
 
 export async function getStaticProps({ params }) {
@@ -16,13 +17,17 @@ export async function getStaticProps({ params }) {
     content_type: "recipe",
     "fields.slug": params.slug,
   });
-
   const [recipe] = recipes;
+
+  if (!recipe) return { redirect: { destination: "/", permanent: false } };
 
   return { props: { recipe }, revalidate: 10 };
 }
 
 export default function RecipeDetails({ recipe }) {
+
+  if (!recipe) return null;
+
   const { title, featureImage, cookingTime, method, ingredients } =
     recipe.fields;
 
@@ -38,7 +43,7 @@ export default function RecipeDetails({ recipe }) {
       <h4>Ingredients:</h4>
       <ul>
         {ingredients.map((ingredient) => (
-          <li>{ingredient}</li>
+          <li key={ingredient}>{ingredient}</li>
         ))}
       </ul>
 
