@@ -25,7 +25,6 @@ export async function getStaticProps({ params }) {
 }
 
 export default function RecipeDetails({ recipe }) {
-
   if (!recipe) return null;
 
   const { title, featureImage, cookingTime, method, ingredients } =
@@ -35,19 +34,34 @@ export default function RecipeDetails({ recipe }) {
 
   return (
     <>
-      <h3>{title}</h3>
-      <p>prepare around of {cookingTime} minutes</p>
+      <div className="flex flex-col items-center">
+        <h3 className="text-7xl font-bold mb-3 text-center">{title}</h3>
+        <p className="text-xl font-bold mb-3 text-center">
+          prepare around of {cookingTime} minutes
+        </p>
 
-      <Image src={image} alt={title} width={400} height={250} />
+        <Image
+          className="rounded-xl "
+          src={image}
+          alt={title}
+          width={600}
+          height={250}
+        />
+      </div>
 
-      <h4>Ingredients:</h4>
-      <ul>
+      <h4 className="text-3xl font-bold mb-3 mt-10 text-orange-700">
+        Ingredients:
+      </h4>
+
+      <ul className="list-disc ml-10">
         {ingredients.map((ingredient) => (
-          <li key={ingredient}>{ingredient}</li>
+          <li className="text-xl mb-3 mt-3" key={ingredient}>
+            {ingredient}
+          </li>
         ))}
       </ul>
 
-      <h5>Prepare Mode</h5>
+      <h5 className="text-3xl font-bold mb-3 mt-10 text-orange-700">Prepare Mode</h5>
       <RichText richText={method} />
     </>
   );

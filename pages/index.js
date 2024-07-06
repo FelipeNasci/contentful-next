@@ -6,12 +6,14 @@ export async function getStaticProps() {
     content_type: "recipe",
   });
 
-  return { props: { recipes } };
+  const rec = [...recipes, ...recipes, ...recipes, ...recipes];
+
+  return { props: { recipes: rec } };
 }
 
 export default function Recipes({ recipes }) {
   return (
-    <div className="recipe-list">
+    <div className="recipe-list flex flex-wrap gap-8 justify-center">
       {recipes.map(({ fields, sys }) => (
         <Card
           key={sys.id}
